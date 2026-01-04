@@ -19,6 +19,8 @@ public class OtherButtonsPanelTop extends OtherButtonsPanel {
 
 	@Override
 	public void addWidgets() {
+		add(new QuestBookButton(this));
+		add(new ResearchButton(this));
 		add(new CollectRewardsButton(this));
 
 		add(new AutopinButton(this));
