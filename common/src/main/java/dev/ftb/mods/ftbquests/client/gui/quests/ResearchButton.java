@@ -28,17 +28,11 @@ public class ResearchButton extends TabButton
     @Override
     public void onClicked(MouseButton button)
     {
-//        if (questScreen.file.selfTeamData.hasUnclaimedRewards(Minecraft.getInstance().player.getUUID(), questScreen.file))
-//        {
-//            playClickSound();
-//            new RewardNotificationsScreen().openGui();
-//            NetworkManager.sendToServer(ClaimAllRewardsMessage.INSTANCE);
-//        }
-        
         QuestScreen gui = ClientUtils.getCurrentGuiAs(QuestScreen.class);
         
         if (gui != null)
         {
+            playClickSound();
             gui.chapterPanel.changeViewTo(new ResearchChapterPanelView(gui.chapterPanel));
         }
     }

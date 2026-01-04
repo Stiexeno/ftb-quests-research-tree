@@ -50,7 +50,7 @@ public class QuestScreen extends BaseScreen {
 	// Note: can't be larger than this, apparently, or tooltips end up underneath
 	public static final int Z_LEVEL = 900;
 
-	final ClientQuestFile file;
+	public final ClientQuestFile file;
 
 	double scrollWidth, scrollHeight;
 	int prevMouseX, prevMouseY;

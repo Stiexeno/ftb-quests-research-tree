@@ -644,5 +644,6 @@
 	"ftbquests.custom_icon.entity": "Entity: %s",
 	"ftbquests.gui.error.selection_multiple_lines": "Selection extends over multiple lines!",
 	"ftbquests.gui.error.already_component": "Line is already text component JSON!",
-	"config.jade.plugin_ftbquests.barrier": "Barriers"
+	"config.jade.plugin_ftbquests.barrier": "Barriers",
+	"ftbquests.gui.research_header" : "Research Tree"
 }

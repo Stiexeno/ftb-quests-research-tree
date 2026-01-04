@@ -13,6 +13,7 @@ public class ResearchChapterPanelView extends BaseChapterPanelView
     @Override
     public void addWidgets(ClientQuestFile file)
     {
-    
+        panel.add(new ResearchHeaderButton(panel, file));
+        panel.add(new ResearchGrid(panel, file.getDefaultChapterGroup().getVisibleChapters(file.selfTeamData).getFirst()));
     }
 }
