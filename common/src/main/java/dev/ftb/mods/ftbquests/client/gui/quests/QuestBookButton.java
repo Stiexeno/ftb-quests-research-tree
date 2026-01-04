@@ -7,7 +7,9 @@ import dev.ftb.mods.ftblibrary.ui.Panel;
 import dev.ftb.mods.ftblibrary.ui.Theme;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
 import dev.ftb.mods.ftblibrary.util.TooltipList;
+import dev.ftb.mods.ftblibrary.util.client.ClientUtils;
 import dev.ftb.mods.ftbquests.client.gui.RewardNotificationsScreen;
+import dev.ftb.mods.ftbquests.client.gui.quests.chapter.ChapterPanelView;
 import dev.ftb.mods.ftbquests.net.ClaimAllRewardsMessage;
 import dev.ftb.mods.ftbquests.quest.theme.property.ThemeProperties;
 import net.minecraft.client.Minecraft;
@@ -25,11 +27,20 @@ public class QuestBookButton extends TabButton
     @Override
     public void onClicked(MouseButton button)
     {
-        if (questScreen.file.selfTeamData.hasUnclaimedRewards(Minecraft.getInstance().player.getUUID(), questScreen.file))
+//        if (questScreen.file.selfTeamData.hasUnclaimedRewards(Minecraft.getInstance().player.getUUID(), questScreen.file))
+//        {
+//            playClickSound();
+//            new RewardNotificationsScreen().openGui();
+//            NetworkManager.sendToServer(ClaimAllRewardsMessage.INSTANCE);
+//        }
+//
+        QuestScreen gui = ClientUtils.getCurrentGuiAs(QuestScreen.class);
+        
+        if (gui != null)
         {
-            playClickSound();
-            new RewardNotificationsScreen().openGui();
-            NetworkManager.sendToServer(ClaimAllRewardsMessage.INSTANCE);
+//            gui.chapterPanel = new ChapterPanel(gui);
+            
+            gui.chapterPanel.changeViewTo(new ChapterPanelView(gui.chapterPanel));
         }
     }
     

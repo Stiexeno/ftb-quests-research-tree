@@ -18,6 +18,8 @@ import dev.ftb.mods.ftbquests.client.FTBQuestsClientConfig;
 import dev.ftb.mods.ftbquests.client.gui.ChangeChapterGroupScreen;
 import dev.ftb.mods.ftbquests.client.gui.ContextMenuBuilder;
 import dev.ftb.mods.ftbquests.client.gui.CustomToast;
+import dev.ftb.mods.ftbquests.client.gui.quests.chapter.BaseChapterPanelView;
+import dev.ftb.mods.ftbquests.client.gui.quests.chapter.ChapterPanelView;
 import dev.ftb.mods.ftbquests.net.CreateObjectMessage;
 import dev.ftb.mods.ftbquests.net.MoveChapterGroupMessage;
 import dev.ftb.mods.ftbquests.net.MoveChapterMessage;
@@ -49,6 +51,7 @@ public class ChapterPanel extends Panel {
 	private static final Pattern NON_EMPTY_PAT = Pattern.compile("^.+$");
 
 	private final QuestScreen questScreen;
+	private final ChapterPanelView view;
 	boolean expanded = isPinned();
 	int curX;
 	int prevX;
@@ -56,31 +59,42 @@ public class ChapterPanel extends Panel {
 	public ChapterPanel(Panel panel) {
 		super(panel);
 		questScreen = (QuestScreen) panel.getGui();
+		
+		view = new ChapterPanelView(this);
 	}
 
 	@Override
 	public void addWidgets() {
-		add(new ModpackButton(this, questScreen.file));
-
-		boolean canEdit = questScreen.file.canEdit();
-
-		for (Chapter chapter : questScreen.file.getDefaultChapterGroup().getVisibleChapters(questScreen.file.selfTeamData)) {
-			add(new ChapterButton(this, chapter));
-		}
-
-		questScreen.file.forAllChapterGroups(group -> {
-			if (!group.isDefaultGroup()) {
-				ChapterGroupButton button = new ChapterGroupButton(this, group);
-				if (canEdit || !button.visibleChapters.isEmpty()) {
-					add(button);
-					if (!group.isGuiCollapsed()) {
-						button.visibleChapters.forEach(chapter -> add(new ChapterButton(this, chapter)));
-					}
-				}
-			}
-		});
+		
+		view.addWidgets(questScreen.file);
+//		add(new ModpackButton(this, questScreen.file));
+//
+//		boolean canEdit = questScreen.file.canEdit();
+//
+//		for (Chapter chapter : questScreen.file.getDefaultChapterGroup().getVisibleChapters(questScreen.file.selfTeamData)) {
+//			add(new ChapterButton(this, chapter));
+//		}
+//
+//		questScreen.file.forAllChapterGroups(group -> {
+//			if (!group.isDefaultGroup()) {
+//				ChapterGroupButton button = new ChapterGroupButton(this, group);
+//				if (canEdit || !button.visibleChapters.isEmpty()) {
+//					add(button);
+//					if (!group.isGuiCollapsed()) {
+//						button.visibleChapters.forEach(chapter -> add(new ChapterButton(this, chapter)));
+//					}
+//				}
+//			}
+//		});
 	}
-
+	
+	public void changeViewTo(BaseChapterPanelView chapterPanelView)
+	{
+		widgets.clear();
+		chapterPanelView.addWidgets(questScreen.file);
+		alignWidgets();
+	}
+	
 	@Override
 	public void alignWidgets() {
 		int wd = 100;
@@ -103,7 +117,7 @@ public class ChapterPanel extends Panel {
 
 		curX = expanded ? 0 : -width;
 	}
-
+	
 	@Override
 	public void tick() {
 		super.tick();
@@ -115,7 +129,7 @@ public class ChapterPanel extends Panel {
 			curX = Math.max(curX - 40, -width);
 		}
 	}
-
+	
 	@Override
 	public void updateMouseOver(int mouseX, int mouseY) {
 		super.updateMouseOver(mouseX, mouseY);
@@ -124,22 +138,22 @@ public class ChapterPanel extends Panel {
 			setExpanded(false);
 		}
 	}
-
+	
 	@Override
 	public boolean shouldDraw() {
 		return !questScreen.isViewingQuest() && super.shouldDraw();
 	}
-
+	
 	@Override
 	public int getX() {
 		return Mth.lerpInt(Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), prevX, curX);
 	}
-
+	
 	@Override
 	public void drawBackground(GuiGraphics graphics, Theme theme, int x, int y, int w, int h) {
 		ThemeProperties.CHAPTER_PANEL_BACKGROUND.get().draw(graphics, x, y, w, h);
 	}
-
+	
 	@Override
 	public void onClosed() {
 		super.onClosed();
@@ -148,7 +162,7 @@ public class ChapterPanel extends Panel {
 			curX = -width;
 		}
 	}
-
+	
 	@Override
 	public void draw(GuiGraphics graphics, Theme theme, int x, int y, int w, int h) {
 		graphics.pose().pushPose();
@@ -157,15 +171,15 @@ public class ChapterPanel extends Panel {
 		super.draw(graphics, theme, x, y, w, h);
 		graphics.pose().popPose();
 	}
-
+	
 	public void setExpanded(boolean b) {
 		expanded = b;
 	}
-
+	
 	boolean isPinned() {
 		return FTBQuestsClientConfig.CHAPTER_PANEL_PINNED.get();
 	}
-
+	
 	public static abstract class ListButton extends Button {
 		public final ChapterPanel chapterPanel;
 
